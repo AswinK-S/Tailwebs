@@ -1,10 +1,10 @@
-import SlotsSignIn from "../components/SlotsSignIn"
+import CustomSignUp from "../components/CustomSignUp"
 import background from '/images/login.jpg'
 
-const Login = () => {
+const SignUp = () => {
     return (
         <>
-            <div className="border h-screen flex flex-col  " style={{
+            <div className="border h-auto flex flex-col  " style={{
                 background: ` url(${background})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
@@ -14,7 +14,7 @@ const Login = () => {
                     <h1 className="text-white font-semibold text-3xl font-serif"> TailWebs</h1>
                 </div>
 
-                <SlotsSignIn />
+                <CustomSignUp />
                 
             </div>
 
@@ -22,4 +22,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default SignUp
