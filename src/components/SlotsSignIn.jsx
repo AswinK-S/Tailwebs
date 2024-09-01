@@ -19,6 +19,9 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axiosApi from '../service/api';
 import {  useNavigate } from 'react-router-dom';
+import {useDispatch} from 'react-redux'
+import { teacherLogIn } from '../store/slice';
+
 
 const theme = createTheme({
   components: {
@@ -43,6 +46,7 @@ export default function CustomSignIn() {
   const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -74,6 +78,7 @@ export default function CustomSignIn() {
     return Object.keys(newErrors).length === 0;
   };
 
+  //login 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
@@ -81,6 +86,7 @@ export default function CustomSignIn() {
       try {
         const response = await axiosApi.post('/api/login', formData);
         if(response.data.message === 'Login successfull'){
+          await dispatch(teacherLogIn(response.data.teacher))
           navigate('/home')
         }
       } catch (error) {

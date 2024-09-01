@@ -13,9 +13,7 @@ const Login = () => {
                 <div className="flex justify-center mt-10  md:mt-20  ">
                     <h1 className="text-white font-semibold text-3xl font-serif"> TailWebs</h1>
                 </div>
-
-                <SlotsSignIn />
-                
+                <SlotsSignIn />                
             </div>
 
         </>

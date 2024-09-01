@@ -5,7 +5,6 @@ const Home = () => {
     return (
         <>
             <NavBar />
-
             <div className="p-5  flex items-center justify-center">
                 <StudentTable />
             </div>

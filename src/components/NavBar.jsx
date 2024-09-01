@@ -14,6 +14,8 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useNavigate } from 'react-router-dom';
 import axiosApi from '../service/api';
+import { useDispatch } from 'react-redux';
+import { teacherLogOut } from '../store/slice';
 
 const pages = ['Students'];
 const settings = ['Logout'];
@@ -23,6 +25,7 @@ function NavBar() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const navigate = useNavigate();
 
+  const dispatch = useDispatch()
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -41,8 +44,8 @@ function NavBar() {
 
   const handleLogout = async () => {
     try {
-      const response = await axiosApi.post('/api/logout');
-      console.log('Logout successful:', response.data.message);
+       await axiosApi.post('/api/logout');
+      dispatch(teacherLogOut());
       navigate('/login');
     } catch (error) {
       console.error('Logout failed:', error);
