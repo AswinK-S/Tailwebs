@@ -17,6 +17,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axiosApi from '../service/api';
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme({
   components: {
@@ -41,6 +42,8 @@ export default function CustomSignUp() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const navigate = useNavigate()
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -71,6 +74,8 @@ export default function CustomSignUp() {
       newErrors.password = 'Password is required';
     } else if (formData.password.length < 6) {
       newErrors.password = 'Password must be at least 6 characters';
+    }else if(!/^(?=.*\d)(?=.[a-z])(?=.*[A-Z]).{6,}$/.test(formData.password)){
+        newErrors.password ='Password must include at least one number, one uppercase letter, and one lowercase letter'
     }
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
@@ -84,8 +89,10 @@ export default function CustomSignUp() {
     if (validateForm()) {
       setIsSubmitting(true);
       try {
-        const response = await axiosApi.post('/api/signup', formData);
-        console.log('Sign up successful', response.data);
+        const response = await axiosApi.post('/api/register', formData);
+        if(response.status===200){
+            navigate('/login')
+        }
 
       } catch (error) {
         console.error('Sign up failed', error.response?.data || error.message);
