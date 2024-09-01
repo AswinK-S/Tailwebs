@@ -1,14 +1,22 @@
-import  { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button } from '@mui/material';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 
-export default function AddStudentModal({ open, onClose, onSubmit, errors }) {
+export default function AddStudentModal({ open, onClose, onSubmit, errors, isEditing, currentStudent }) {
     const [name, setName] = useState('');
     const [subject, setSubject] = useState('');
     const [mark, setMark] = useState('');
     const [frontendErrors, setFrontendErrors] = useState({});
+
+    useEffect(() => {
+        if (isEditing && currentStudent) {
+            setName(currentStudent.name || '');
+            setSubject(currentStudent.subjectName || '');
+            setMark(currentStudent.mark || '');
+        }
+    }, [isEditing, currentStudent]);
 
     const validate = () => {
         let tempErrors = {};
@@ -43,7 +51,7 @@ export default function AddStudentModal({ open, onClose, onSubmit, errors }) {
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-            <DialogTitle align='center'>Add Student</DialogTitle>
+            <DialogTitle align='center'>{isEditing ? 'Edit Student' : 'Add Student'}</DialogTitle>
             <DialogContent>
                 <TextField
                     label="Student Name"
@@ -100,11 +108,9 @@ export default function AddStudentModal({ open, onClose, onSubmit, errors }) {
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleSubmit} variant="contained" style={{ backgroundColor: '#333', color: '#fff', margin: '0 auto' }}>
-                    Add
+                    {isEditing ? 'Update' : 'Add'}
                 </Button>
             </DialogActions>
         </Dialog>
     );
 }
-
-

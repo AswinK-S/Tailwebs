@@ -80,7 +80,6 @@ export default function CustomSignIn() {
       setIsSubmitting(true);
       try {
         const response = await axiosApi.post('/api/login', formData);
-        console.log('Sign in successful', response.data);
         if(response.data.message === 'Login successfull'){
           navigate('/home')
         }
