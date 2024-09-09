@@ -4,6 +4,7 @@ import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 
+
 export default function AddStudentModal({ open, onClose, onSubmit, errors, isEditing, currentStudent }) {
     const [name, setName] = useState('');
     const [subject, setSubject] = useState('');
@@ -11,12 +12,23 @@ export default function AddStudentModal({ open, onClose, onSubmit, errors, isEdi
     const [frontendErrors, setFrontendErrors] = useState({});
 
     useEffect(() => {
+        
         if (isEditing && currentStudent) {
+            console.log('dd');
             setName(currentStudent.name || '');
             setSubject(currentStudent.subjectName || '');
             setMark(currentStudent.mark || '');
         }
+        if(open){
+            console.log('open',open);
+            setName(currentStudent.name || '');
+            setSubject(currentStudent.subjectName || '');
+            setMark(currentStudent.mark || '');
+        }
+        
     }, [isEditing, currentStudent]);
+
+
 
     const validate = () => {
         let tempErrors = {};
@@ -45,6 +57,7 @@ export default function AddStudentModal({ open, onClose, onSubmit, errors, isEdi
 
     const handleSubmit = () => {
         if (validate()) {
+            console.log('updat ',name);
             onSubmit({ name, subject, mark });
         }
     };

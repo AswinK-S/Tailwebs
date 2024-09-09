@@ -7,6 +7,9 @@ import axiosApi from '../service/api';
 import { useNavigate } from 'react-router-dom';
 import AddStudentModal from './AddStudentModal'; 
 import DeleteConfirmationModal from './DeleteConfirmationModal';
+import {  toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const VirtuosoTableComponents = {
     Scroller: React.forwardRef((props, ref) => (
@@ -62,7 +65,7 @@ function rowContent(index, student, handleEdit, handleDelete) {
             <TableCell style={{ width: columns[3].width }}>
                 <IconButton
                     aria-label="edit"
-                    onClick={() => handleEdit(student.id)}
+                    onClick={() => handleEdit(student._id)}
                 >
                     <CreateOutlinedIcon />
                 </IconButton>
@@ -81,7 +84,7 @@ export default function StudentTable() {
     const [students, setStudents] = useState([]);
     const [open, setOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-    const [currentStudent, setCurrentStudent] = useState(null);
+    const [currentStudent, setCurrentStudent] = useState('');
     const [backendErrors, setBackendErrors] = useState({});
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [studentToDelete, setStudentToDelete] = useState(null);
@@ -90,13 +93,14 @@ export default function StudentTable() {
 
     const handleOpen = () => {
         setBackendErrors({});
-        setCurrentStudent(null); 
+        setCurrentStudent(''); 
         setIsEditing(false);
         setOpen(true);
     };
 
     const handleClose = () => {
         setOpen(false);
+        
     };
 
     const handleSubmit = async (student) => {
@@ -106,11 +110,24 @@ export default function StudentTable() {
                 subjectName: student.subject,
                 mark: student.mark,
             };
+           
             const response = isEditing 
                 ? await axiosApi.put(`/api/editStudent/${currentStudent._id}`, newStudent) 
                 : await axiosApi.post('/api/addStudent', newStudent);
 
-            console.log('Response:', response);
+           console.log('res',response);
+            if(response.data.message ==='updated the matching student'){
+                toast.success('Updated the matching data')
+            }
+            if(response.data.message==='New student created successfully'){
+                setOpen(false)
+                toast.success('Added new student')
+                
+            }
+            if(response.data.message==='Student updated successfully'){
+                toast.success('Student updated successfully')
+            }
+           
             handleClose();
             fetchStudents();
         } catch (error) {
@@ -121,7 +138,7 @@ export default function StudentTable() {
                 });
                 setBackendErrors(errors);
             } else {
-                console.error('An unexpected error occurred:', error);
+              
                 if (error.response.status === 401) {
                     navigate('/login');
                 }
@@ -142,7 +159,8 @@ export default function StudentTable() {
     };
 
     const handleEdit = (studentId) => {
-        const student = students.find(s => s.id === studentId);
+     
+        const student = students.find(s => s._id === studentId);
         if (student) {
             setCurrentStudent(student);
             setIsEditing(true);
@@ -158,6 +176,7 @@ export default function StudentTable() {
     const confirmDelete = async () => {
         try {
             await axiosApi.delete(`/api/delete/${studentToDelete}`);
+            toast.success('Deleted the Student Data')
             fetchStudents();
             setDeleteModalOpen(false);
         } catch (error) {

@@ -21,6 +21,9 @@ import axiosApi from '../service/api';
 import {  useNavigate } from 'react-router-dom';
 import {useDispatch} from 'react-redux'
 import { teacherLogIn } from '../store/slice';
+import {  toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 
 const theme = createTheme({
@@ -86,7 +89,8 @@ export default function CustomSignIn() {
       try {
         const response = await axiosApi.post('/api/login', formData);
         if(response.data.message === 'Login successfull'){
-          await dispatch(teacherLogIn(response.data.teacher))
+          toast.success('Login successfull')
+          dispatch(teacherLogIn(response.data.teacher))
           navigate('/home')
         }
       } catch (error) {
@@ -223,6 +227,7 @@ export default function CustomSignIn() {
           )}
         </Container>
       </Box>
+      {/* <ToastContainer/> */}
     </ThemeProvider>
   );
 }

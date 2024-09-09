@@ -18,6 +18,9 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axiosApi from '../service/api';
 import { useNavigate } from 'react-router-dom';
+import {  toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const theme = createTheme({
   components: {
@@ -55,13 +58,13 @@ export default function CustomSignUp() {
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show);
+  const newErrors = {};
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
 
   const validateForm = () => {
-    const newErrors = {};
     if (!formData.name) {
       newErrors.name = 'Name is required';
     }
@@ -91,12 +94,20 @@ export default function CustomSignUp() {
       try {
         const response = await axiosApi.post('/api/register', formData);
         if(response.status===200){
+          toast.success('Registration success')
             navigate('/login')
         }
 
       } catch (error) {
-        console.error('Sign up failed', error.response?.data || error.message);
+
+        if(error.response?.data.message ==='Teacher exists in this mail'){
+          console.log('er1');
+          toast.error("Teacher already exists with this email!");
+        }else{
+          toast.error('Sign up failed. Please try again.');
+        }
         setErrors({ submit: 'Sign up failed. Please try again.' });
+
       } finally {
         setIsSubmitting(false);
       }
@@ -260,7 +271,6 @@ export default function CustomSignUp() {
             >
               {isSubmitting ? 'Signing Up...' : 'Sign Up'}
             </Button>
-
             {errors.submit && (
               <Typography color="error" variant="body2" align="center" sx={{ mt: 2 }}>
                 {errors.submit}
@@ -273,6 +283,8 @@ export default function CustomSignUp() {
           </form>
         </Container>
       </Box>
+      {/* <ToastContainer /> */}
+
     </ThemeProvider>
   );
 }
